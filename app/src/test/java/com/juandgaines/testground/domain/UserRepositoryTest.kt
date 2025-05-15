@@ -7,32 +7,27 @@ import org.junit.Before
 import org.junit.Test
 
 class UserRepositoryTest {
-
     private lateinit var userRepository: UserRepositoryImpl
     private lateinit var api: UserFakeApi
 
     @Before
-    fun setUp(){
+    fun setUp() {
         api = UserFakeApi()
-        userRepository = UserRepositoryImpl( api)
+        userRepository = UserRepositoryImpl(api)
     }
-
 
     @Test
     fun givenValidUserId_whenGetProfileWithFakeApi_thenReturnsProfile() = runTest {
-        //Given
-        val userid= "1"
+        // Given
+        val userId = "1"
         //Act
-        val profileResult = userRepository.getProfile(userid)
+        val profileResult = userRepository.getProfile("1")
 
-        //Assert
-
+        // Assert
         Truth.assertThat(profileResult.isSuccess).isTrue()
         Truth.assertThat(profileResult.getOrThrow().user.id).isEqualTo("1")
 
-        val expectedPlaces= api.places.filter { it.id == "1" }
+        val expectedPlaces = api.places.filter { it.id == "1" }
         Truth.assertThat(profileResult.getOrThrow().places).isEqualTo(expectedPlaces)
-
-
     }
 }

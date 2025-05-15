@@ -4,9 +4,7 @@ import com.google.common.truth.Truth
 import org.junit.Before
 import org.junit.Test
 
-
 class ExperienceCalculatorTest {
-
     private lateinit var experienceCalculator: ExperienceCalculator
 
     @Before
@@ -15,12 +13,12 @@ class ExperienceCalculatorTest {
     }
 
     @Test
-    fun givenTouristSpot_whenCalculateExperience_thenReturns5Points() {
-        // Arrange
+    fun givenTouristSpot_whenCalculatorExperience_thenReturns5Points() {
+        // Given
         val touristSpot = Place(
             id = "1",
             name = "Times Square",
-            coordinates = Coordinates(40.5, -73.5)
+            coordinates = Coordinates(40.7, -73.5)
         )
 
         // Act
@@ -31,10 +29,10 @@ class ExperienceCalculatorTest {
     }
 
     @Test
-    fun givenCulturalPlace_whenCalculateExperience_thenReturns4Points() {
-        // Arrange
+    fun givenCulturalPlace_whenCalculatorExperience_thenReturns4Points() {
+        // Given
         val culturalPlace = Place(
-            id = "2",
+            id = "1",
             name = "Smithsonian Museum",
             coordinates = Coordinates(38.5, -76.5)
         )
@@ -47,8 +45,8 @@ class ExperienceCalculatorTest {
     }
 
     @Test
-    fun givenMultiplePlaces_whenCalculateExperience_thenReturnsSumOfScores() {
-        // Arrange
+    fun givenMultiplePlaces_whenCalculatorExperience_thenReturnsSumOfScores() {
+        // Given
         val places = listOf(
             Place("1", "Tourist Spot", Coordinates(40.5, -73.5)), // 5 points
             Place("2", "Cultural Place", Coordinates(38.5, -76.5)), // 4 points
@@ -63,35 +61,11 @@ class ExperienceCalculatorTest {
     }
 
     @Test
-    fun givenEmptyList_whenCalculateExperience_thenReturnsZero() {
+    fun givenEmptyList_whenCalculatorExperience_thenReturnsZero() {
         // Act
         val result = experienceCalculator.calculateExperience(emptyList())
 
         // Assert
         Truth.assertThat(result).isEqualTo(0)
     }
-
-    /**
-     * Test naming convention explanation:
-     *
-     * Format: `given[Condition]_when[Action]_then[ExpectedResult]`
-     *
-     * Why this format?
-     * 1. Uses backticks to allow spaces and natural language
-     * 2. Clearly separates test conditions, actions, and expected results
-     * 3. Follows BDD (Behavior-Driven Development) principles
-     * 4. Makes test purpose immediately clear
-     *
-     * Truth Assertions advantages:
-     * 1. More readable than JUnit assertions
-     * 2. Better error messages
-     * 3. Fluent API with clear intent
-     * 4. Chain-able assertions
-     *
-     * Example assertions:
-     * assertThat(value).isEqualTo(expected)
-     * assertThat(list).hasSize(expected)
-     * assertThat(string).contains(substring)
-     * assertThat(boolean).isTrue()
-     */
 }
