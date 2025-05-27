@@ -2,6 +2,7 @@ package com.juandgaines.testground.presentation
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
@@ -17,12 +18,9 @@ class ProfileScreenTest {
     @get:Rule
     val composeRule = createComposeRule()
 
-    @get:Rule
-    val mainDispatcherRule = MainDispatcherRule()
-
     @Test
     fun profileScreen_whenProfileLoaded_showsUserAndPlaces() {
-        // Arrange
+        // Given
         val state = previewProfileState()
 
         // Act
@@ -35,15 +33,44 @@ class ProfileScreenTest {
             }
         }
 
-        // Assert
-        composeRule.onNodeWithText("Welcome Test User!").assertIsDisplayed()
-        composeRule.onNodeWithText("Place 1").assertIsDisplayed()
-        composeRule.onNodeWithText("Lat: 1.0").assertIsDisplayed()
-        composeRule.onNodeWithText("Long: 1.0").assertIsDisplayed()
+        // Then
+        composeRule.onNodeWithText("Welcome Test User!").isDisplayed()
+        composeRule.onNodeWithText("Place 1").isDisplayed()
+        composeRule.onNodeWithText("Lat: 1.0").isDisplayed()
+        composeRule.onNodeWithText("Long: 1.0").isDisplayed()
+        Thread.sleep(2000)
     }
+
+    fun previewProfileState() = ProfileState(
+        Profile(
+            user = User(
+                id = "test-user",
+                username = "Test User"
+            ),
+            places = listOf(
+                Place(
+                    id = "1",
+                    name = "Place 1",
+                    coordinates = Coordinates(
+                        latitude = 1.0,
+                        longitude = 1.0
+                    )
+                ),
+                Place(
+                    id = "2",
+                    name = "Place 2",
+                    coordinates = Coordinates(
+                        latitude = 2.0,
+                        longitude = 2.0
+                    )
+                )
+            )
+        )
+    )
 
     @Test
     fun profileScreen_whenLoading_showsLoadingIndicator() {
+        // Act
         composeRule.setContent {
             MaterialTheme {
                 ProfileScreen(
@@ -61,38 +88,22 @@ class ProfileScreenTest {
 
     @Test
     fun profileScreen_whenError_showsErrorMessage() {
+        // Given
         val errorMessage = "Error loading profile"
-        
+
+        // Act
         composeRule.setContent {
             MaterialTheme {
                 ProfileScreen(
                     state = ProfileState(
                         errorMessage = errorMessage
-                    ), onPlaceClick = {}
+                    ),
+                    onPlaceClick = {}
                 )
             }
         }
 
+        // Assert
         composeRule.onNodeWithText(errorMessage).assertIsDisplayed()
     }
 }
-
-fun previewProfileState() = ProfileState(
-    profile = Profile(
-        user = User(
-            id = "test-user",
-            username = "Test User"
-        ),
-        places = (1..3).map {
-            Place(
-                id = it.toString(),
-                name = "Place $it",
-                coordinates = Coordinates(
-                    latitude = it.toDouble(),
-                    longitude = it.toDouble()
-                )
-            )
-        }
-    ),
-    isLoading = false
-) 
