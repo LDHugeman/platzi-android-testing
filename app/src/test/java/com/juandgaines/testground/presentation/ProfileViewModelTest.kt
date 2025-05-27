@@ -1,6 +1,7 @@
 package com.juandgaines.testground.presentation
 
 import androidx.lifecycle.SavedStateHandle
+import app.cash.turbine.test
 import com.google.common.truth.Truth
 import com.juandgaines.testground.util.MainDispatcherRule
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -56,5 +57,22 @@ class ProfileViewModelTest {
         Truth.assertThat(viewModel.state.value.profile).isNull()
         Truth.assertThat(viewModel.state.value.errorMessage).isEqualTo("Test exception")
         Truth.assertThat(viewModel.state.value.isLoading).isFalse()
+    }
+
+    @Test
+    fun givenLoadingState_whenLoadProfile_thenStateUpdatesCorrectly() = runTest {
+        viewModel.state.test {
+            val emission = awaitItem()
+            Truth.assertThat(emission.isLoading).isFalse()
+
+            viewModel.loadProfile()
+
+            val emission2 = awaitItem()
+            Truth.assertThat(emission2.isLoading).isTrue()
+
+            val emission3 = awaitItem()
+            Truth.assertThat(emission3.isLoading).isFalse()
+            Truth.assertThat(emission3.profile).isEqualTo(repository.profileToReturn)
+        }
     }
 }
